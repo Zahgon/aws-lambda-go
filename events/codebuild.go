@@ -1,7 +1,6 @@
 package events
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -180,41 +179,16 @@ type CodeBuildTime time.Time
 const codeBuildTimeFormat = "Jan 2, 2006 3:04:05 PM"
 
 // MarshalJSON converts a given CodeBuildTime to json
-func (t CodeBuildTime) MarshalJSON() ([]byte, error) {
-	return json.Marshal(time.Time(t).Format(codeBuildTimeFormat))
-}
+func (t CodeBuildTime) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalJSON converts a given json to a CodeBuildTime
-func (t *CodeBuildTime) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-
-	ts, err := time.Parse(codeBuildTimeFormat, s)
-	if err != nil {
-		return err
-	}
-
-	*t = CodeBuildTime(ts)
-	return nil
-}
+func (t *CodeBuildTime) UnmarshalJSON(data []byte) error { _ = "STUB: not implemented"; return nil }
 
 // CodeBuildNumber represents the number of the build
 type CodeBuildNumber int32
 
 // MarshalJSON converts a given CodeBuildNumber to json
-func (n CodeBuildNumber) MarshalJSON() ([]byte, error) {
-	return json.Marshal(float32(n))
-}
+func (n CodeBuildNumber) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalJSON converts a given json to a CodeBuildNumber
-func (n *CodeBuildNumber) UnmarshalJSON(data []byte) error {
-	var f float32
-	if err := json.Unmarshal(data, &f); err != nil {
-		return err
-	}
-
-	*n = CodeBuildNumber(int32(f))
-	return nil
-}
+func (n *CodeBuildNumber) UnmarshalJSON(data []byte) error { _ = "STUB: not implemented"; return nil }

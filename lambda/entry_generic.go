@@ -17,5 +17,6 @@ type HandlerFunc[TIn, TOut any] interface {
 // StartHandlerFunc is the same as StartWithOptions except that it takes a generic input
 // so that the function signature can be validated at compile time.
 func StartHandlerFunc[TIn any, TOut any, H HandlerFunc[TIn, TOut]](handler H, options ...Option) {
-	start(newHandler(handler, options...))
+	_ = "STUB: not implemented"
+	return
 }

@@ -32,18 +32,10 @@ type logOptions struct {
 type LogOption func(*logOptions)
 
 // WithFunctionARN includes the invoked function ARN in log records.
-func WithFunctionARN() LogOption {
-	return func(o *logOptions) {
-		o.fields = append(o.fields, field{"functionArn", func(lc *LambdaContext) string { return lc.InvokedFunctionArn }})
-	}
-}
+func WithFunctionARN() LogOption { _ = "STUB: not implemented"; return *new(LogOption) }
 
 // WithTenantID includes the tenant ID in log records (for multi-tenant functions).
-func WithTenantID() LogOption {
-	return func(o *logOptions) {
-		o.fields = append(o.fields, field{"tenantId", func(lc *LambdaContext) string { return lc.TenantID }})
-	}
-}
+func WithTenantID() LogOption { _ = "STUB: not implemented"; return *new(LogOption) }
 
 // NewLogHandler returns a [slog.Handler] for AWS Lambda structured logging.
 // It reads AWS_LAMBDA_LOG_FORMAT and AWS_LAMBDA_LOG_LEVEL from environment,
@@ -52,46 +44,18 @@ func WithTenantID() LogOption {
 // By default, only requestId is injected. Use WithFunctionARN or WithTenantID to include more.
 // See the package examples for usage.
 func NewLogHandler(opts ...LogOption) slog.Handler {
-	options := &logOptions{}
-	for _, opt := range opts {
-		opt(options)
-	}
-
-	level := parseLogLevel()
-	handlerOpts := &slog.HandlerOptions{
-		Level:       level,
-		ReplaceAttr: ReplaceAttr,
-	}
-
-	var h slog.Handler
-	if logFormat == "JSON" {
-		h = slog.NewJSONHandler(os.Stdout, handlerOpts)
-	} else {
-		h = slog.NewTextHandler(os.Stdout, handlerOpts)
-	}
-
-	return &lambdaHandler{handler: h, fields: options.fields}
+	_ = "STUB: not implemented"
+	return *new(slog.Handler)
 }
 
 // NewLogger returns a [*slog.Logger] configured for AWS Lambda structured logging.
 // This is a convenience function equivalent to slog.New(NewLogHandler(opts...)).
-func NewLogger(opts ...LogOption) *slog.Logger {
-	return slog.New(NewLogHandler(opts...))
-}
+func NewLogger(opts ...LogOption) *slog.Logger { _ = "STUB: not implemented"; return nil }
 
 // ReplaceAttr maps slog's default keys to AWS Lambda's log format (time->timestamp, msg->message).
 func ReplaceAttr(groups []string, attr slog.Attr) slog.Attr {
-	if len(groups) > 0 {
-		return attr
-	}
-
-	switch attr.Key {
-	case slog.TimeKey:
-		attr.Key = "timestamp"
-	case slog.MessageKey:
-		attr.Key = "message"
-	}
-	return attr
+	_ = "STUB: not implemented"
+	return *new(slog.Attr)
 }
 
 // lambdaHandler wraps a slog.Handler to inject Lambda context fields.
@@ -102,50 +66,26 @@ type lambdaHandler struct {
 
 // Enabled implements slog.Handler.
 func (h *lambdaHandler) Enabled(ctx context.Context, level slog.Level) bool {
-	return h.handler.Enabled(ctx, level)
+	_ = "STUB: not implemented"
+	return false
 }
 
 // Handle implements slog.Handler.
 func (h *lambdaHandler) Handle(ctx context.Context, r slog.Record) error {
-	if lc, ok := FromContext(ctx); ok {
-		r.AddAttrs(slog.String("requestId", lc.AwsRequestID))
-
-		for _, field := range h.fields {
-			if v := field.value(lc); v != "" {
-				r.AddAttrs(slog.String(field.key, v))
-			}
-		}
-	}
-	return h.handler.Handle(ctx, r)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WithAttrs implements slog.Handler.
 func (h *lambdaHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &lambdaHandler{
-		handler: h.handler.WithAttrs(attrs),
-		fields:  h.fields,
-	}
+	_ = "STUB: not implemented"
+	return *new(slog.Handler)
 }
 
 // WithGroup implements slog.Handler.
 func (h *lambdaHandler) WithGroup(name string) slog.Handler {
-	return &lambdaHandler{
-		handler: h.handler.WithGroup(name),
-		fields:  h.fields,
-	}
+	_ = "STUB: not implemented"
+	return *new(slog.Handler)
 }
 
-func parseLogLevel() slog.Level {
-	switch logLevel {
-	case "DEBUG":
-		return slog.LevelDebug
-	case "INFO":
-		return slog.LevelInfo
-	case "WARN":
-		return slog.LevelWarn
-	case "ERROR":
-		return slog.LevelError
-	default:
-		return slog.LevelInfo
-	}
-}
+func parseLogLevel() slog.Level { _ = "STUB: not implemented"; return *new(slog.Level) }

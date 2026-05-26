@@ -7,16 +7,8 @@ package lambda
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
-	"log"
-	"net"
-	"net/rpc"
-	"os"
-	"time"
 
 	"github.com/aws/aws-lambda-go/lambda/messages"
-	"github.com/aws/aws-lambda-go/lambdacontext"
 )
 
 func init() {
@@ -32,18 +24,7 @@ func init() {
 	}}, startFunctions...)
 }
 
-func startFunctionRPC(port string, handler Handler) error {
-	lis, err := net.Listen("tcp", "localhost:"+port)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = rpc.Register(NewFunction(handler))
-	if err != nil {
-		log.Fatal("failed to register handler function")
-	}
-	rpc.Accept(lis)
-	return errors.New("accept should not have returned")
-}
+func startFunctionRPC(port string, handler Handler) error { _ = "STUB: not implemented"; return nil }
 
 // Function struct which wrap the Handler
 //
@@ -55,60 +36,23 @@ type Function struct {
 // NewFunction which creates a Function with a given Handler
 //
 // Deprecated: The Function type is public for the go1.x runtime internal use of the net/rpc package
-func NewFunction(handler Handler) *Function {
-	return &Function{newHandler(handler)}
-}
+func NewFunction(handler Handler) *Function { _ = "STUB: not implemented"; return nil }
 
 // Ping method which given a PingRequest and a PingResponse parses the PingResponse
 func (fn *Function) Ping(req *messages.PingRequest, response *messages.PingResponse) error {
-	*response = messages.PingResponse{}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // Invoke method try to perform a command given an InvokeRequest and an InvokeResponse
 func (fn *Function) Invoke(req *messages.InvokeRequest, response *messages.InvokeResponse) error {
-	defer func() {
-		if err := recover(); err != nil {
-			response.Error = lambdaPanicResponse(err)
-		}
-	}()
-
-	deadline := time.Unix(req.Deadline.Seconds, req.Deadline.Nanos).UTC()
-	invokeContext, cancel := context.WithDeadline(fn.baseContext(), deadline)
-	defer cancel()
-
-	lc := &lambdacontext.LambdaContext{
-		AwsRequestID:       req.RequestId,
-		InvokedFunctionArn: req.InvokedFunctionArn,
-		Identity: lambdacontext.CognitoIdentity{
-			CognitoIdentityID:     req.CognitoIdentityId,
-			CognitoIdentityPoolID: req.CognitoIdentityPoolId,
-		},
-	}
-	if len(req.ClientContext) > 0 {
-		if err := json.Unmarshal(req.ClientContext, &lc.ClientContext); err != nil {
-			response.Error = lambdaErrorResponse(err)
-			return nil
-		}
-	}
-	invokeContext = lambdacontext.NewContext(invokeContext, lc)
-
-	// nolint:staticcheck
-	invokeContext = context.WithValue(invokeContext, "x-amzn-trace-id", req.XAmznTraceId)
-	os.Setenv("_X_AMZN_TRACE_ID", req.XAmznTraceId)
-
-	payload, err := fn.handler.Invoke(invokeContext, req.Payload)
-	if err != nil {
-		response.Error = lambdaErrorResponse(err)
-		return nil
-	}
-	response.Payload = payload
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// nolint:staticcheck
+
 func (fn *Function) baseContext() context.Context {
-	if fn.handler.baseContext != nil {
-		return fn.handler.baseContext
-	}
-	return context.Background()
+	_ = "STUB: not implemented"
+	return *new(context.Context)
 }

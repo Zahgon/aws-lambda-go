@@ -14,14 +14,8 @@ type HandlerTrace struct {
 }
 
 func callbackCompose(f1, f2 func(context.Context, interface{})) func(context.Context, interface{}) {
-	return func(ctx context.Context, event interface{}) {
-		if nil != f1 {
-			f1(ctx, event)
-		}
-		if nil != f2 {
-			f2(ctx, event)
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type handlerTraceKey struct{}
@@ -30,15 +24,12 @@ type handlerTraceKey struct{}
 // wrap the return value of lambda.NewHandler to access to the request and
 // response events.
 func NewContext(ctx context.Context, trace HandlerTrace) context.Context {
-	existing := FromContext(ctx)
-	return context.WithValue(ctx, handlerTraceKey{}, HandlerTrace{
-		RequestEvent:  callbackCompose(existing.RequestEvent, trace.RequestEvent),
-		ResponseEvent: callbackCompose(existing.ResponseEvent, trace.ResponseEvent),
-	})
+	_ = "STUB: not implemented"
+	return *new(context.Context)
 }
 
 // FromContext returns the HandlerTrace associated with the provided context.
 func FromContext(ctx context.Context) HandlerTrace {
-	trace, _ := ctx.Value(handlerTraceKey{}).(HandlerTrace)
-	return trace
+	_ = "STUB: not implemented"
+	return *new(HandlerTrace)
 }

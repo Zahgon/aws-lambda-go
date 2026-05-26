@@ -8,10 +8,8 @@ package lambdaurl
 
 import (
 	"context"
-	"encoding/base64"
 	"io"
 	"net/http"
-	"strings"
 	"sync"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -37,7 +35,8 @@ type detectContentTypeContextKey struct{}
 //	        lambdaurl.WithDetectContentType(true)
 //	)
 func WithDetectContentType(detectContentType bool) lambda.Option {
-	return lambda.WithContextValue(detectContentTypeContextKey{}, detectContentType)
+	_ = "STUB: not implemented"
+	return *new(lambda.Option)
 }
 
 type httpResponseWriter struct {
@@ -54,48 +53,33 @@ type header struct {
 }
 
 func (w *httpResponseWriter) Header() http.Header {
-	if w.header == nil {
-		w.header = http.Header{}
-	}
-	return w.header
+	_ = "STUB: not implemented"
+	return *new(http.Header)
 }
 
-func (w *httpResponseWriter) Write(p []byte) (int, error) {
-	w.writeHeader(http.StatusOK, p)
-	return w.writer.Write(p)
-}
+func (w *httpResponseWriter) Write(p []byte) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
-func (w *httpResponseWriter) WriteHeader(statusCode int) {
-	w.writeHeader(statusCode, nil)
-}
+func (w *httpResponseWriter) WriteHeader(statusCode int) { _ = "STUB: not implemented"; return }
 
 func (w *httpResponseWriter) writeHeader(statusCode int, initialPayload []byte) {
-	w.once.Do(func() {
-		if w.detectContentType {
-			if w.Header().Get("Content-Type") == "" {
-				w.Header().Set("Content-Type", detectContentType(initialPayload))
-			}
-		}
-		w.ready <- header{code: statusCode, header: w.header}
-	})
+	_ = "STUB: not implemented"
+	return
 }
 
 func detectContentType(p []byte) string {
+	_ = "STUB: not implemented"
 	// http.DetectContentType returns "text/plain; charset=utf-8" for nil and zero-length byte slices.
 	// This is a weird behavior, since otherwise it defaults to "application/octet-stream"! So we'll do that.
 	// This differs from http.ListenAndServe, which set no Content-Type when the initial Flush body is empty.
-	if len(p) == 0 {
-		return "application/octet-stream"
-	}
-	return http.DetectContentType(p)
+	return ""
 }
 
 type requestContextKey struct{}
 
 // RequestFromContext returns the *events.LambdaFunctionURLRequest from a context.
 func RequestFromContext(ctx context.Context) (*events.LambdaFunctionURLRequest, bool) {
-	req, ok := ctx.Value(requestContextKey{}).(*events.LambdaFunctionURLRequest)
-	return req, ok
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // Wrap converts an http.Handler into a Lambda request handler.
@@ -103,63 +87,19 @@ func RequestFromContext(ctx context.Context) (*events.LambdaFunctionURLRequest, 
 // Only Lambda Function URLs configured with `InvokeMode: RESPONSE_STREAM` are supported with the returned handler.
 // The response body of the handler will conform to the content-type `application/vnd.awslambda.http-integration-response`.
 func Wrap(handler http.Handler) func(context.Context, *events.LambdaFunctionURLRequest) (*events.LambdaFunctionURLStreamingResponse, error) {
-	return func(ctx context.Context, request *events.LambdaFunctionURLRequest) (*events.LambdaFunctionURLStreamingResponse, error) {
-
-		var body io.Reader = strings.NewReader(request.Body)
-		if request.IsBase64Encoded {
-			body = base64.NewDecoder(base64.StdEncoding, body)
-		}
-		url := "https://" + request.RequestContext.DomainName + request.RawPath
-		if request.RawQueryString != "" {
-			url += "?" + request.RawQueryString
-		}
-		ctx = context.WithValue(ctx, requestContextKey{}, request)
-		httpRequest, err := http.NewRequestWithContext(ctx, request.RequestContext.HTTP.Method, url, body)
-		if err != nil {
-			return nil, err
-		}
-		httpRequest.RemoteAddr = request.RequestContext.HTTP.SourceIP
-		for k, v := range request.Headers {
-			httpRequest.Header.Add(k, v)
-		}
-
-		ready := make(chan header) // Signals when it's OK to start returning the response body to Lambda
-		r, w := io.Pipe()
-		responseWriter := &httpResponseWriter{writer: w, ready: ready}
-		if detectContentType, ok := ctx.Value(detectContentTypeContextKey{}).(bool); ok {
-			responseWriter.detectContentType = detectContentType
-		}
-		go func() {
-			defer close(ready)
-			defer w.Close() // TODO: recover and CloseWithError the any panic value once the runtime API client supports plumbing fatal errors through the reader
-			//nolint:errcheck
-			defer responseWriter.Write(nil) // force default status, headers, content type detection, if none occurred during the execution of the handler
-			handler.ServeHTTP(responseWriter, httpRequest)
-		}()
-		header := <-ready
-		response := &events.LambdaFunctionURLStreamingResponse{
-			Body:       r,
-			StatusCode: header.code,
-		}
-		if len(header.header) > 0 {
-			response.Headers = make(map[string]string, len(header.header))
-			for k, v := range header.header {
-				if k == "Set-Cookie" {
-					response.Cookies = v
-				} else {
-					response.Headers[k] = strings.Join(v, ",")
-				}
-			}
-		}
-		return response, nil
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Signals when it's OK to start returning the response body to Lambda
+
+// TODO: recover and CloseWithError the any panic value once the runtime API client supports plumbing fatal errors through the reader
+//nolint:errcheck
+// force default status, headers, content type detection, if none occurred during the execution of the handler
 
 // Start wraps a http.Handler and calls lambda.StartHandlerFunc
 // Only supports:
 //   - Lambda Function URLs configured with `InvokeMode: RESPONSE_STREAM`
 //   - Lambda Functions using the `provided` or `provided.al2` runtimes.
 //   - Lambda Functions using the `go1.x` runtime when compiled with `-tags lambda.norpc`
-func Start(handler http.Handler, options ...lambda.Option) {
-	lambda.StartHandlerFunc(Wrap(handler), options...)
-}
+func Start(handler http.Handler, options ...lambda.Option) { _ = "STUB: not implemented"; return }

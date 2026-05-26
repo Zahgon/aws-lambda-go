@@ -1,7 +1,6 @@
 package events
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -50,21 +49,6 @@ type ECSContainerInstanceEventVersionInfo struct {
 
 // MarshalJSON implements custom marshaling to marshal the struct into JSON format while preserving an empty string slice in `StringSetValue` field.
 func (r ECSContainerInstanceEventResource) MarshalJSON() ([]byte, error) {
-	type Alias ECSContainerInstanceEventResource
-	aux := struct {
-		StringSetValue json.RawMessage `json:"stringSetValue,omitempty"`
-		Alias
-	}{
-		Alias: (Alias)(r),
-	}
-
-	if r.StringSetValue != nil {
-		b, err := json.Marshal(r.StringSetValue)
-		if err != nil {
-			return nil, err
-		}
-		aux.StringSetValue = b
-	}
-
-	return json.Marshal(&aux)
+	_ = "STUB: not implemented"
+	return nil, nil
 }

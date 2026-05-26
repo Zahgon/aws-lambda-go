@@ -1,6 +1,4 @@
 package test
 
 // nolint: staticcheck
-func GetMalformedJson() []byte {
-	return []byte(`{ "Records`)
-}
+func GetMalformedJson() []byte { _ = "STUB: not implemented"; return nil }

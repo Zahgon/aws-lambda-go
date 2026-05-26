@@ -2,8 +2,6 @@
 
 package messages
 
-import "fmt"
-
 type PingRequest struct {
 }
 
@@ -41,9 +39,7 @@ type InvokeResponse_Error struct {
 	ShouldExit bool                               `json:"-"`
 }
 
-func (e InvokeResponse_Error) Error() string {
-	return fmt.Sprintf("%#v", e)
-}
+func (e InvokeResponse_Error) Error() string { _ = "STUB: not implemented"; return "" }
 
 //nolint:staticcheck
 type InvokeResponse_Error_StackFrame struct {

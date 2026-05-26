@@ -11,7 +11,6 @@ package lambdacontext
 
 import (
 	"context"
-	"encoding/json"
 	"os"
 	"strconv"
 )
@@ -50,9 +49,7 @@ func init() {
 	}
 }
 
-func MaxConcurrency() int {
-	return maxConcurrency
-}
+func MaxConcurrency() int { _ = "STUB: not implemented"; return 0 }
 
 // ClientApplication is metadata about the calling application.
 type ClientApplication struct {
@@ -73,30 +70,7 @@ type ClientContext struct {
 // This handles the case where values in the "custom" map are not strings
 // (e.g. nested JSON objects), by serializing non-string values back to
 // their JSON string representation.
-func (cc *ClientContext) UnmarshalJSON(data []byte) error {
-	var raw struct {
-		Client ClientApplication          `json:"Client"`
-		Env    map[string]string          `json:"env"`
-		Custom map[string]json.RawMessage `json:"custom"`
-	}
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	cc.Client = raw.Client
-	cc.Env = raw.Env
-	if raw.Custom != nil {
-		cc.Custom = make(map[string]string, len(raw.Custom))
-		for k, v := range raw.Custom {
-			var s string
-			if err := json.Unmarshal(v, &s); err == nil {
-				cc.Custom[k] = s
-			} else {
-				cc.Custom[k] = string(v)
-			}
-		}
-	}
-	return nil
-}
+func (cc *ClientContext) UnmarshalJSON(data []byte) error { _ = "STUB: not implemented"; return nil }
 
 // CognitoIdentity is the cognito identity used by the calling application.
 type CognitoIdentity struct {
@@ -124,11 +98,12 @@ var contextKey = &key{}
 
 // NewContext returns a new Context that carries value lc.
 func NewContext(parent context.Context, lc *LambdaContext) context.Context {
-	return context.WithValue(parent, contextKey, lc)
+	_ = "STUB: not implemented"
+	return *new(context.Context)
 }
 
 // FromContext returns the LambdaContext value stored in ctx, if any.
 func FromContext(ctx context.Context) (*LambdaContext, bool) {
-	lc, ok := ctx.Value(contextKey).(*LambdaContext)
-	return lc, ok
+	_ = "STUB: not implemented"
+	return nil, false
 }

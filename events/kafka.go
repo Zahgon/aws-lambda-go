@@ -2,10 +2,6 @@
 
 package events
 
-import (
-	"encoding/json"
-)
-
 type KafkaEvent struct {
 	EventSource      string                   `json:"eventSource"`
 	EventSourceARN   string                   `json:"eventSourceArn"`
@@ -28,23 +24,7 @@ type KafkaRecord struct {
 type JSONNumberBytes []byte
 
 // MarshalJSON converts byte array into array of signed integers.
-func (b JSONNumberBytes) MarshalJSON() ([]byte, error) {
-	signedNumbers := make([]int8, len(b))
-	for i, value := range b {
-		signedNumbers[i] = int8(value)
-	}
-	return json.Marshal(signedNumbers)
-}
+func (b JSONNumberBytes) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalJSON converts a given json with potential negative values into byte array.
-func (b *JSONNumberBytes) UnmarshalJSON(data []byte) error {
-	var signedNumbers []int8
-	if err := json.Unmarshal(data, &signedNumbers); err != nil {
-		return err
-	}
-	*b = make(JSONNumberBytes, len(signedNumbers))
-	for i, value := range signedNumbers {
-		(*b)[i] = byte(value)
-	}
-	return nil
-}
+func (b *JSONNumberBytes) UnmarshalJSON(data []byte) error { _ = "STUB: not implemented"; return nil }

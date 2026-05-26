@@ -1,12 +1,5 @@
 package events
 
-import (
-	"bytes"
-	"compress/gzip"
-	"encoding/base64"
-	"encoding/json"
-)
-
 // CloudwatchLogsEvent represents raw data from a cloudwatch logs event
 type CloudwatchLogsEvent struct {
 	AWSLogs CloudwatchLogsRawData `json:"awslogs"`
@@ -20,21 +13,8 @@ type CloudwatchLogsRawData struct {
 
 // Parse returns a struct representing a usable CloudwatchLogs event
 func (c CloudwatchLogsRawData) Parse() (d CloudwatchLogsData, err error) {
-	data, err := base64.StdEncoding.DecodeString(c.Data)
-	if err != nil {
-		return
-	}
-
-	zr, err := gzip.NewReader(bytes.NewBuffer(data))
-	if err != nil {
-		return
-	}
-	defer zr.Close()
-
-	dec := json.NewDecoder(zr)
-	err = dec.Decode(&d)
-
-	return
+	_ = "STUB: not implemented"
+	return *new(CloudwatchLogsData), nil
 }
 
 // CloudwatchLogsData is an unmarshal'd, ungzip'd, cloudwatch logs event

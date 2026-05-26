@@ -4,10 +4,6 @@ package cfn
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
-	"log"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -25,53 +21,15 @@ type SNSCustomResourceLambdaFunction func(context.Context, events.SNSEvent) (rea
 type CustomResourceFunction func(context.Context, Event) (physicalResourceID string, data map[string]interface{}, err error)
 
 func lambdaWrapWithClient(lambdaFunction CustomResourceFunction, client httpClient) (fn CustomResourceLambdaFunction) {
-	fn = func(ctx context.Context, event Event) (reason string, err error) {
-		r := NewResponse(&event)
-
-		// A previous physical resource id exists unless this is a create request.
-		fallbackPhysicalResourceID := event.PhysicalResourceID
-		if event.RequestType == RequestCreate {
-			// If this is a create request, the fallback should be the request ID
-			fallbackPhysicalResourceID = event.RequestID
-		}
-
-		funcDidPanic := true
-		defer func() {
-			if funcDidPanic {
-				r.Status = StatusFailed
-				r.Reason = "Function panicked, see log stream for details"
-				r.PhysicalResourceID = fallbackPhysicalResourceID
-				// FIXME: something should be done if an error is returned here
-				_ = r.sendWith(client)
-			}
-		}()
-
-		r.PhysicalResourceID, r.Data, err = lambdaFunction(ctx, event)
-		funcDidPanic = false
-
-		if r.PhysicalResourceID == "" {
-			r.PhysicalResourceID = fallbackPhysicalResourceID
-			log.Printf("PhysicalResourceID not set. Using fallback PhysicalResourceID: %s\n", r.PhysicalResourceID)
-		}
-
-		if err != nil {
-			r.Status = StatusFailed
-			r.Reason = err.Error()
-			log.Printf("sending status failed: %s\n", r.Reason)
-		} else {
-			r.Status = StatusSuccess
-		}
-
-		err = r.sendWith(client)
-		if err != nil {
-			reason = err.Error()
-		}
-
-		return
-	}
-
-	return
+	_ = "STUB: not implemented"
+	return *new(CustomResourceLambdaFunction)
 }
+
+// A previous physical resource id exists unless this is a create request.
+
+// If this is a create request, the fallback should be the request ID
+
+// FIXME: something should be done if an error is returned here
 
 // LambdaWrap returns a CustomResourceLambdaFunction which is something lambda.Start()
 // will understand. The purpose of doing this is so that Response Handling boiler
@@ -87,26 +45,13 @@ func lambdaWrapWithClient(lambdaFunction CustomResourceFunction, client httpClie
 //		lambda.Start(cfn.LambdaWrap(myLambda))
 //	}
 func LambdaWrap(lambdaFunction CustomResourceFunction) (fn CustomResourceLambdaFunction) {
-	return lambdaWrapWithClient(lambdaFunction, http.DefaultClient)
+	_ = "STUB: not implemented"
+	return *new(CustomResourceLambdaFunction)
 }
 
 // LambdaWrapSNS wraps a Lambda handler with support for SNS-based custom
 // resources. Usage and purpose otherwise same as LambdaWrap().
 func LambdaWrapSNS(lambdaFunction CustomResourceFunction) SNSCustomResourceLambdaFunction {
-	inner := LambdaWrap(lambdaFunction)
-	return func(ctx context.Context, event events.SNSEvent) (reason string, err error) {
-		if len(event.Records) != 1 {
-			err = errors.New("expected exactly 1 incoming record")
-			return
-		}
-
-		message := event.Records[0].SNS.Message
-
-		var innerEvent Event
-		if err = json.Unmarshal([]byte(message), &innerEvent); err != nil {
-			return
-		}
-
-		return inner(ctx, innerEvent)
-	}
+	_ = "STUB: not implemented"
+	return *new(SNSCustomResourceLambdaFunction)
 }

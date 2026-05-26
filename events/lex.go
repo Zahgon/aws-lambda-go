@@ -75,7 +75,4 @@ type Attachment struct {
 	Buttons           []map[string]string `json:"buttons,omitempty"`
 }
 
-func (h *LexEvent) Clear() {
-	h.Bot = nil
-	h.CurrentIntent = nil
-}
+func (h *LexEvent) Clear() { _ = "STUB: not implemented"; return }

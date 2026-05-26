@@ -5,37 +5,9 @@
 
 package lambda
 
-import (
-	"context"
-	"errors"
-	"sync"
-
-	"github.com/aws/aws-lambda-go/lambdacontext"
-)
-
-func startRuntimeAPILoop(api string, handler Handler) error {
-	return startRuntimeAPILoopWithConcurrency(api, handler, lambdacontext.MaxConcurrency())
-}
+func startRuntimeAPILoop(api string, handler Handler) error { _ = "STUB: not implemented"; return nil }
 
 func startRuntimeAPILoopWithConcurrency(api string, handler Handler, concurrency int) error {
-	h := newHandler(handler)
-	client := newRuntimeAPIClient(api)
-	if concurrency <= 1 {
-		return doRuntimeAPILoop(context.Background(), client, h)
-	}
-
-	ctx, cancel := context.WithCancelCause(context.Background())
-	defer cancel(errors.New("no handlers run"))
-
-	wg := &sync.WaitGroup{}
-	wg.Add(concurrency)
-	for range concurrency {
-		go func() {
-			cancel(doRuntimeAPILoop(ctx, client, h))
-			wg.Done()
-		}()
-	}
-	wg.Wait()
-
-	return context.Cause(ctx)
+	_ = "STUB: not implemented"
+	return nil
 }

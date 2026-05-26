@@ -5,8 +5,7 @@ package main
 import (
 	"archive/zip"
 	"flag"
-	"fmt"
-	"io/ioutil" //nolint: staticcheck
+	"fmt" //nolint: staticcheck
 	"log"
 	"os"
 	"path/filepath"
@@ -42,69 +41,14 @@ func main() {
 }
 
 func writeExe(writer *zip.Writer, pathInZip string, data []byte) error {
-	if pathInZip != "bootstrap" {
-		header := &zip.FileHeader{Name: "bootstrap", Method: zip.Deflate}
-		header.SetMode(0755 | os.ModeSymlink)
-		link, err := writer.CreateHeader(header)
-		if err != nil {
-			return err
-		}
-		if _, err := link.Write([]byte(pathInZip)); err != nil {
-			return err
-		}
-	}
-
-	exe, err := writer.CreateHeader(&zip.FileHeader{
-		CreatorVersion: 3 << 8,     // indicates Unix
-		ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-		Name:           pathInZip,
-		Method:         zip.Deflate,
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = exe.Write(data)
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// indicates Unix
+// -rwxrwxrwx file permissions
+
 func compressExeAndArgs(outZipPath string, exePath string, args []string) error {
-	zipFile, err := os.Create(outZipPath)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		closeErr := zipFile.Close()
-		if closeErr != nil {
-			fmt.Fprintf(os.Stderr, "Failed to close zip file: %v\n", closeErr)
-		}
-	}()
-
-	zipWriter := zip.NewWriter(zipFile)
-	defer zipWriter.Close()
-	data, err := ioutil.ReadFile(exePath)
-	if err != nil {
-		return err
-	}
-
-	err = writeExe(zipWriter, filepath.Base(exePath), data)
-	if err != nil {
-		return err
-	}
-
-	for _, arg := range args {
-		writer, err := zipWriter.Create(arg)
-		if err != nil {
-			return err
-		}
-		data, err := ioutil.ReadFile(arg)
-		if err != nil {
-			return err
-		}
-		_, err = writer.Write(data)
-		if err != nil {
-			return err
-		}
-	}
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }

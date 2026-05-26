@@ -3,8 +3,6 @@
 package events
 
 import (
-	"encoding/json"
-	"net/url"
 	"time"
 )
 
@@ -61,19 +59,7 @@ type S3Object struct {
 	Sequencer     string `json:"sequencer"`
 }
 
-func (o *S3Object) UnmarshalJSON(data []byte) error {
-	type rawS3Object S3Object
-	if err := json.Unmarshal(data, (*rawS3Object)(o)); err != nil {
-		return err
-	}
-	key, err := url.QueryUnescape(o.Key)
-	if err != nil {
-		return err
-	}
-	o.URLDecodedKey = key
-
-	return nil
-}
+func (o *S3Object) UnmarshalJSON(data []byte) error { _ = "STUB: not implemented"; return nil }
 
 type S3GlacierEventData struct {
 	RestoreEventData *S3RestoreEventData `json:"restoreEventData"`

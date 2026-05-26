@@ -5,7 +5,6 @@ package lambda
 import (
 	"context"
 	"log"
-	"os"
 )
 
 // Start takes a handler and talks to an internal Lambda endpoint to pass requests to the handler. If the
@@ -44,16 +43,12 @@ import (
 // Errors from Read() (other than io.EOF) are reported as function errors.
 //
 // Note: If "TOut" is both JSON serializable and implements io.Reader, JSON serialization takes precedence.
-func Start(handler interface{}) {
-	StartWithOptions(handler)
-}
+func Start(handler interface{}) { _ = "STUB: not implemented"; return }
 
 // StartWithContext is the same as Start except sets the base context for the function.
 //
 // Deprecated: use lambda.StartWithOptions(handler, lambda.WithContext(ctx)) instead
-func StartWithContext(ctx context.Context, handler interface{}) {
-	StartWithOptions(handler, WithContext(ctx))
-}
+func StartWithContext(ctx context.Context, handler interface{}) { _ = "STUB: not implemented"; return }
 
 // StartHandler takes in a Handler wrapper interface which can be implemented either by a
 // custom function or a struct.
@@ -63,14 +58,10 @@ func StartWithContext(ctx context.Context, handler interface{}) {
 //	func Invoke(context.Context, []byte) ([]byte, error)
 //
 // Deprecated: use lambda.Start(handler) instead
-func StartHandler(handler Handler) {
-	StartWithOptions(handler)
-}
+func StartHandler(handler Handler) { _ = "STUB: not implemented"; return }
 
 // StartWithOptions is the same as Start after the application of any handler options specified
-func StartWithOptions(handler interface{}, options ...Option) {
-	start(newHandler(handler, options...))
-}
+func StartWithOptions(handler interface{}, options ...Option) { _ = "STUB: not implemented"; return }
 
 type startFunction struct {
 	env string
@@ -96,21 +87,11 @@ var (
 //
 // Deprecated: use lambda.StartWithOptions(handler, lambda.WithContext(ctx)) instead
 func StartHandlerWithContext(ctx context.Context, handler Handler) {
-	StartWithOptions(handler, WithContext(ctx))
+	_ = "STUB: not implemented"
+	return
 }
 
-func start(handler *handlerOptions) {
-	var keys []string
-	for _, start := range startFunctions {
-		config := os.Getenv(start.env)
-		if config != "" {
-			// in normal operation, the start function never returns
-			// if it does, exit!, this triggers a restart of the lambda function
-			err := start.f(config, handler)
-			logFatalf("%v", err)
-		}
-		keys = append(keys, start.env)
-	}
-	logFatalf("expected AWS Lambda environment variables %s are not defined", keys)
+func start(handler *handlerOptions) { _ = "STUB: not implemented"; return }
 
-}
+// in normal operation, the start function never returns
+// if it does, exit!, this triggers a restart of the lambda function

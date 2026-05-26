@@ -5,10 +5,4 @@
 
 package lambda
 
-import (
-	"context"
-)
-
-func startRuntimeAPILoop(api string, handler Handler) error {
-	return doRuntimeAPILoop(context.Background(), newRuntimeAPIClient(api), newHandler(handler))
-}
+func startRuntimeAPILoop(api string, handler Handler) error { _ = "STUB: not implemented"; return nil }

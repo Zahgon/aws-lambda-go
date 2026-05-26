@@ -4,10 +4,7 @@ package events
 
 import (
 	"bytes"
-	"encoding/json"
-	"errors"
 	"io"
-	"net/http"
 )
 
 // LambdaFunctionURLRequest contains data coming from the HTTP request to a Lambda Function URL.
@@ -82,44 +79,18 @@ type LambdaFunctionURLStreamingResponse struct {
 }
 
 func (r *LambdaFunctionURLStreamingResponse) Read(p []byte) (n int, err error) {
-	if r.prelude == nil {
-		if r.StatusCode == 0 {
-			r.StatusCode = http.StatusOK
-		}
-		b, err := json.Marshal(struct {
-			StatusCode int               `json:"statusCode"`
-			Headers    map[string]string `json:"headers,omitempty"`
-			Cookies    []string          `json:"cookies,omitempty"`
-		}{
-			StatusCode: r.StatusCode,
-			Headers:    r.Headers,
-			Cookies:    r.Cookies,
-		})
-		if err != nil {
-			return 0, err
-		}
-		r.prelude = bytes.NewBuffer(append(b, 0, 0, 0, 0, 0, 0, 0, 0))
-	}
-	if r.prelude.Len() > 0 {
-		return r.prelude.Read(p)
-	}
-	if r.Body == nil {
-		return 0, io.EOF
-	}
-	return r.Body.Read(p)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-func (r *LambdaFunctionURLStreamingResponse) Close() error {
-	if closer, ok := r.Body.(io.ReadCloser); ok {
-		return closer.Close()
-	}
-	return nil
-}
+func (r *LambdaFunctionURLStreamingResponse) Close() error { _ = "STUB: not implemented"; return nil }
 
 func (r *LambdaFunctionURLStreamingResponse) MarshalJSON() ([]byte, error) {
-	return nil, errors.New("not json")
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (r *LambdaFunctionURLStreamingResponse) ContentType() string {
-	return "application/vnd.awslambda.http-integration-response"
+	_ = "STUB: not implemented"
+	return ""
 }
